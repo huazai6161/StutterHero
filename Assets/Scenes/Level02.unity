@@ -1489,9 +1489,8 @@ MonoBehaviour:
   timeProgressBar: {fileID: 169902095}
   typingProgressBar: {fileID: 434752124}
   scriptLines:
-  - abcdefg hijkl mnopq rst
-  - uvw xyz abcd efg
-  - hijklm no pq rst
+  - I-did-not-want-to-pet-the-dear-soft-cat.
+  - "Don\u2019t-take-the-dirty-teddy-bear-today."
   requiredRepeatPositions:
   - lineIndex: 1
     letterIndex: 5
@@ -1499,7 +1498,7 @@ MonoBehaviour:
   - lineIndex: 2
     letterIndex: 8
     repeatCount: 8
-  targetSecondsPerChar: 1.5
+  targetSecondsPerChar: 0.6
   speedTolerance: 0.4
   failOnDeviation: 1
   failToleranceMultiplier: 2

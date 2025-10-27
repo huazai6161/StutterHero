@@ -17,6 +17,7 @@ public class GameManager : MonoBehaviour
 {
     public static GameManager Instance;
 
+    public GameObject gracetext;  // 新增：感谢文本对象
     public TextMeshProUGUI currentText;
     public TextMeshProUGUI feedbackText;
     public TextMeshProUGUI scoreText;
@@ -176,6 +177,8 @@ public class GameManager : MonoBehaviour
                 repeatProgressBar.gameObject.SetActive(true);
                 repeatProgressBar.value = (float)currentRepeatCount / requiredRepeats;
 
+                Camera.main.GetComponent<CameraShake>().Shake(0.1f, 0.05f);  // 轻微震动反馈
+
                 // 显示当前进度
                 feedbackText.text = $"<color=yellow>Progress: {currentRepeatCount}/{requiredRepeats}</color>";
 
@@ -228,6 +231,7 @@ public class GameManager : MonoBehaviour
     
     private void OnCurrentLineComplete()
     {
+        gracetext.SetActive(true);
         feedbackText.gameObject.SetActive(true);
         feedbackText.text = "<color=green>finish! prepare for the next line</color>";
         continueButton.SetActive(true);
