@@ -4,39 +4,39 @@ using System.Collections.Generic;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
 
-// 新增可序列化的自定义类，用于存储重复位置信息
+// Serializable custom class to store repeat position information
 [System.Serializable]
 public class RepeatPosition
 {
-    public int lineIndex;       // 行索引
-    public int letterIndex;     // 字母索引
-    public int repeatCount = 5; // 重复次数（默认5次）
+    public int lineIndex;       // line index
+    public int letterIndex;     // letter index
+    public int repeatCount = 5; // repeat count (default 5)
 }
 
 public class GameManager : MonoBehaviour
 {
     public static GameManager Instance;
 
-    public GameObject gracetext;  // 新增：感谢文本对象
+    public GameObject gracetext;  // Added: gratitude/thanks text object
     public TextMeshProUGUI currentText;
     public TextMeshProUGUI feedbackText;
     public TextMeshProUGUI scoreText;
     public GameObject continueButton;
     public GameObject retryButton;
     public GameObject gameCompletePanel;
-    public Slider repeatProgressBar;  // 新增：进度条组件
+    public Slider repeatProgressBar;  // Added: progress bar component
 
-    public string[] scriptLines;  // 完整剧本
-    public List<RepeatPosition> requiredRepeatPositions;  // 改用自定义类列表
+    public string[] scriptLines;  // full script lines
+    public List<RepeatPosition> requiredRepeatPositions;  // use custom class list
 
-    private int currentLineIndex = 0;  // 当前行索引
+    private int currentLineIndex = 0;  // current line index
     private int score = 0;
     private bool isGameActive = true;
-    private List<char> currentLineLetters = new List<char>();  // 当前行的所有字母（过滤后）
-    private int currentInputIndex = 0;  // 当前输入到的位置
-    private int currentRepeatCount = 0;  // 当前重复输入计数
-    private bool isInRepeatMode = false;  // 是否处于重复输入模式
-    private int requiredRepeats = 5;  // 需要重复的次数
+    private List<char> currentLineLetters = new List<char>();  // all letters of the current line (filtered)
+    private int currentInputIndex = 0;  // current input position
+    private int currentRepeatCount = 0;  // current repeat input count
+    private bool isInRepeatMode = false;  // whether in repeat input mode
+    private int requiredRepeats = 5;  // number of required repeats
 
     private void Awake()
     {
@@ -70,7 +70,7 @@ public class GameManager : MonoBehaviour
         continueButton.SetActive(false);
         retryButton.SetActive(false);
         gameCompletePanel.SetActive(false);
-        repeatProgressBar.gameObject.SetActive(false);  // 隐藏进度条
+        repeatProgressBar.gameObject.SetActive(false);  // hide progress bar
 
         LoadCurrentLine();
     }
@@ -87,7 +87,7 @@ public class GameManager : MonoBehaviour
         currentInputIndex = 0;
         currentRepeatCount = 0;
         isInRepeatMode = false;
-        repeatProgressBar.gameObject.SetActive(false);  // 隐藏进度条
+        repeatProgressBar.gameObject.SetActive(false);  // hide progress bar
         
         foreach (char c in scriptLines[currentLineIndex])
         {
@@ -111,7 +111,7 @@ public class GameManager : MonoBehaviour
         {
             if (char.IsLetter(c))
             {
-                // 检查当前字母是否需要重复输入
+                // Check whether the current letter requires repeated input
                 bool isRepeatLetter = IsRepeatPosition(currentLineIndex, letterIndex);
                 
                 if (letterIndex < currentInputIndex)
@@ -120,7 +120,7 @@ public class GameManager : MonoBehaviour
                 }
                 else
                 {
-                    // 重复字母用特殊颜色标记（橙色）
+                    // Repeat letters are marked with a special color (orange)
                     string color = isRepeatLetter ? "#FFA500" : "#000000";
                     processedText += $"<color={color}>{c}</color>";
                 }
@@ -128,7 +128,7 @@ public class GameManager : MonoBehaviour
             }
             else
             {
-                // 标点和空格保持浅灰色
+                // Punctuation and spaces remain black
                 processedText += $"<color=#000000>{c}</color>";
             }
         }
@@ -136,7 +136,7 @@ public class GameManager : MonoBehaviour
         currentText.text = processedText;
     }
 
-    // 检查当前位置是否需要重复输入
+    // Check whether the current position requires repeated input
     private bool IsRepeatPosition(int lineIndex, int letterIndex)
     {
         if (requiredRepeatPositions == null) return false;
@@ -145,7 +145,7 @@ public class GameManager : MonoBehaviour
         {
             if (pos.lineIndex == lineIndex && pos.letterIndex == letterIndex)
             {
-                requiredRepeats = pos.repeatCount;  // 获取自定义重复次数
+                requiredRepeats = pos.repeatCount;  // get custom repeat count
                 return true;
             }
         }
@@ -160,29 +160,29 @@ public class GameManager : MonoBehaviour
         feedbackText.text = "";
         retryButton.SetActive(false);
 
-        // 转换为小写进行比较
+        // Convert to lowercase for comparison
         char lowerInput = char.ToLower(inputChar);
         char targetChar = currentLineLetters[currentInputIndex];
 
-        // 检查当前位置是否需要重复输入
+        // Check whether current position requires repeated input
         bool isRepeatPosition = IsRepeatPosition(currentLineIndex, currentInputIndex);
 
         if (lowerInput == targetChar)
         {
             if (isRepeatPosition)
             {
-                // 处理需要重复输入的位置
+                // Handle positions that require repeated input
                 isInRepeatMode = true;
                 currentRepeatCount++;
                 repeatProgressBar.gameObject.SetActive(true);
                 repeatProgressBar.value = (float)currentRepeatCount / requiredRepeats;
 
-                Camera.main.GetComponent<CameraShake>().Shake(0.1f, 0.05f);  // 轻微震动反馈
+                Camera.main.GetComponent<CameraShake>().Shake(0.1f, 0.05f);  // light camera shake feedback
 
-                // 显示当前进度
+                // Display current progress
                 feedbackText.text = $"<color=yellow>Progress: {currentRepeatCount}/{requiredRepeats}</color>";
 
-                // 达到要求的重复次数才算输入成功
+                // Only when the required repeat count is reached does the input count as successful
                 if (currentRepeatCount >= requiredRepeats)
                 {
                     CompleteCharacterInput();
@@ -193,13 +193,13 @@ public class GameManager : MonoBehaviour
             }
             else
             {
-                // 普通位置，一次输入成功
+                // Normal position: single successful input
                 CompleteCharacterInput();
             }
         }
         else
         {
-            // 输入错误时重置重复计数
+            // On incorrect input, reset repeat count
             if (isRepeatPosition || isInRepeatMode)
             {
                 currentRepeatCount = 0;
@@ -214,7 +214,7 @@ public class GameManager : MonoBehaviour
         }
     }
 
-    // 完成一个字符的输入处理
+    // Handle completion of a character input
     private void CompleteCharacterInput()
     {
         currentInputIndex++;
@@ -222,7 +222,7 @@ public class GameManager : MonoBehaviour
         UpdateScoreText();
         UpdateDisplayText();
 
-        // 检查是否完成当前行
+        // Check whether the current line is complete
         if (currentInputIndex >= currentLineLetters.Count)
         {
             OnCurrentLineComplete();

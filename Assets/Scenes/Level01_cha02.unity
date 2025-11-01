@@ -2269,7 +2269,8 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
+  m_text: We shall fight on the beaches, we shall fight on the landing grounds, we
+    shall fight in the fields and in the streets, we shall fight in the hills
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 1ebfa9e8c63f743f5bb23918b8084303, type: 2}
   m_sharedMaterial: {fileID: 7855237887729570225, guid: 1ebfa9e8c63f743f5bb23918b8084303, type: 2}
